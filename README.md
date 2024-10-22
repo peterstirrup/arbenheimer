@@ -119,12 +119,12 @@ Returns:
 ~~ChatGPT~~ I created a simple application that uses the service to display real-time market data.
 
 ```bash
-cd app
+cd testapp
 go run grpc_proxy.go # Converts gRPC to REST
 ```
 
 ```bash
-cd app
+cd testapp
 python3 -m http.server
 ```
 

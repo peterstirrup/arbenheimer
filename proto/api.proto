@@ -1,0 +1,28 @@
+syntax = "proto3";
+package arbenheimer;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/peterstirrup/arbenheimer/internal/inbound/server/pb";
+
+service ArbenheimerService {
+  rpc GetMarket(GetMarketRequest) returns (GetMarketResponse) {}
+}
+
+message GetMarketRequest {
+  string trading_pair = 1;
+}
+
+message GetMarketResponse {
+  repeated Market markets = 1;
+}
+
+message Market {
+  string trading_pair = 1;
+  string exchange = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  string last_traded_price = 4;
+  string best_buy_price = 5; // Highest buy price
+  string best_sell_price = 6; // Lowest sell price
+  string volume_24hr = 7; // Trading volume over 24hr
+}

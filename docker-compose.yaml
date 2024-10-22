@@ -1,0 +1,51 @@
+version: "3"
+services:
+  binanceupdater:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /binanceupdater
+    environment:
+      - BINANCE_API_KEY=keyhere
+      - BINANCE_HOSTNAME=https://api.binance.com
+      - BINANCE_WEBSOCKET_URL=wss://stream.binance.com:9443/ws/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=debug
+    depends_on:
+      - redis
+    restart: on-failure
+  kucoinupdater:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: /kucoinupdater
+    environment:
+      - KUCOIN_HOSTNAME=https://api.kucoin.com
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=debug
+    depends_on:
+      - redis
+    restart: on-failure
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=9000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LOG_LEVEL=debug
+      - TEST=true
+    command: /server
+    depends_on:
+      - redis
+    restart: on-failure
+  redis:
+    image: redis:latest
+    ports:
+      - "6379"

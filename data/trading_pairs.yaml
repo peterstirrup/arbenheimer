@@ -1,0 +1,28 @@
+exchanges:
+    - name: binance
+      pairs:
+        - BTC/USDT
+        - ETH/USDT
+        - LTC/USDT
+        - XRP/USDT
+        - BCH/USDT
+        - EOS/USDT
+        - XLM/USDT
+        - ADA/USDT
+        - TRX/USDT
+        - BNB/USDT
+        - DASH/USDT
+    - name: kucoin
+      pairs:
+        - BTC/USDT
+        - ETH/USDT
+        - LTC/USDT
+        - XRP/USDT
+        - BCH/USDT
+        - EOS/USDT
+        - XLM/USDT
+        - ADA/USDT
+        - TRX/USDT
+        - BNB/USDT
+        - XMR/USDT
+        - DASH/USDT

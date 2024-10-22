@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbitrage Opportunities</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Crypto Market Arbitrage</h1>
+
+    <!-- Dropdown for trading pairs -->
+    <label for="tradingPairSelect">Select Trading Pair:</label>
+    <select id="tradingPairSelect"></select>
+
+    <canvas id="priceChart" width="800" height="400"></canvas>
+
+    <table id="market-table">
+        <thead>
+        <tr>
+            <th>Exchange</th>
+            <th>Last Traded Price</th>
+            <th>Best Buy Price</th>
+            <th>Best Sell Price</th>
+            <th>24h Volume</th>
+            <th>Timestamp</th>
+        </tr>
+        </thead>
+        <tbody id="market-data">
+        <!-- Data will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -28,16 +28,22 @@ const (
 
 type cliArgs struct {
 	Host      string `arg:"--host,required,env:HOST"`
+	LogLevel  string `arg:"--log-level,env:LOG_LEVEL" default:"debug"`
 	Port      int    `arg:"env:PORT" default:"9000"`
 	RedisHost string `arg:"--redis-host,required,env:REDIS_HOST"`
 	RedisPort string `arg:"--redis-port,required,env:REDIS_PORT"`
 }
 
 func main() {
-	zerolog.SetGlobalLevel(zerolog.Level(zerolog.DebugLevel))
-
 	var args cliArgs
 	arg.MustParse(&args)
+
+	logLevel, err := zerolog.ParseLevel(args.LogLevel)
+	if err != nil {
+		log.Warn().Msg("Failed to parse log level, defaulting to debug")
+		logLevel = zerolog.DebugLevel
+	}
+	zerolog.SetGlobalLevel(logLevel)
 
 	ctx := context.Background()
 
@@ -51,13 +57,13 @@ func main() {
 	s := server.NewServer(server.Config{MarketUseCases: u})
 	gs, err := newGRPCServer(ctx, args.Host, args.Port)
 
-	pb.RegisterArbenheimerServiceServer(gs.S, s)
+	pb.RegisterArbenheimerServiceServer(gs.s, s)
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to start gRPC server")
+		log.Fatal().Err(err).Msg("Failed to start gRPC server")
 	}
 
 	if err := gs.Run(ctx); err != nil {
-		log.Fatal().Err(err).Msg("failed to run gRPC server")
+		log.Fatal().Err(err).Msg("Failed to run gRPC server")
 	}
 }
 
@@ -65,9 +71,9 @@ func main() {
 // over TCP connections. The Run method provides context cancellation handling
 // not provided by the base type.
 type gRPCServer struct {
-	S       *grpc.Server
+	s       *grpc.Server
 	lis     net.Listener
-	HS      *health.Server
+	hs      *health.Server
 	address string
 }
 
@@ -86,8 +92,9 @@ func newGRPCServer(ctx context.Context, host string, port int, opts ...grpc.Serv
 
 	s := grpc.NewServer(c.serverOptions...)
 	healthServer := health.NewServer()
+	grpc_health_v1.RegisterHealthServer(s, healthServer)
 
-	return &gRPCServer{S: s, lis: lis, address: address, HS: healthServer}, nil
+	return &gRPCServer{s: s, lis: lis, address: address, hs: healthServer}, nil
 }
 
 type grpcConfig struct {
@@ -116,15 +123,15 @@ func (s *gRPCServer) Run(ctx context.Context) error {
 	go func() {
 		select {
 		case <-ctx.Done():
-			s.HS.SetServingStatus("ready", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
-			s.S.GracefulStop()
+			s.hs.SetServingStatus("ready", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
+			s.s.GracefulStop()
 			<-done
 
 		case <-done:
 		}
 	}()
 
-	err := s.S.Serve(s.lis)
+	err := s.s.Serve(s.lis)
 	done <- struct{}{}
 
 	if err != nil {

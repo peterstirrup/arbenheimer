@@ -33,14 +33,14 @@ func main() {
 
 	logLevel, err := zerolog.ParseLevel(args.LogLevel)
 	if err != nil {
-		log.Warn().Msg("failed to parse log level, defaulting to debug")
+		log.Warn().Msg("Failed to parse log level, defaulting to debug")
 		logLevel = zerolog.DebugLevel
 	}
 	zerolog.SetGlobalLevel(logLevel)
 
 	pairs, err := getPairsForExchange(entities.ExchangeKuCoin)
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to get trading pairs for exchange")
+		log.Fatal().Err(err).Msg("Failed to get trading pairs for exchange")
 	}
 
 	rc := redis.NewClient(redis.Config{Host: args.RedisHost, Port: args.RedisPort})
@@ -61,7 +61,7 @@ func main() {
 	})
 
 	if err := ws.Run(ctx); err != nil {
-		log.Fatal().Err(err).Msg("failed to run websocket client")
+		log.Fatal().Err(err).Msg("Failed to run websocket client")
 	}
 }
 

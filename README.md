@@ -135,6 +135,7 @@ Go to `localhost:8000` in your browser.
 - Use `go generate ./...` to generate Protobuf Go code.
 - Endpoint to get trading pairs with the highest variance between exchanges.
 - Trading bot to perform the trades - another microservice.
+- Implement graceful shutdown with a signal handler (ctx.Cancel)
 - Integration tests.
 - Unit tests at server and Redis level.
 - Add more exchanges!

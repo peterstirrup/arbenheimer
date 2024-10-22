@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     command: /binanceupdater
     environment:
-      - BINANCE_API_KEY=keyhere
+      - BINANCE_API_KEY=yourkeyhere
       - BINANCE_HOSTNAME=https://api.binance.com
       - BINANCE_WEBSOCKET_URL=wss://stream.binance.com:9443/ws/
       - REDIS_HOST=redis

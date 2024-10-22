@@ -141,7 +141,9 @@ func (c *WebsocketClient) listen(ctx context.Context) error {
 				Timestamp:       time.UnixMilli(msg.Data.Market.Datetime),
 				Volume24hr:      msg.Data.Market.VolValue,
 			})
-			log.Err(err).Interface("msg", msg).Msg("Failed to update market")
+			if err != nil {
+				log.Err(err).Interface("msg", msg).Msg("Failed to update market")
+			}
 		}
 	}
 }
